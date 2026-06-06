@@ -41,14 +41,14 @@ Pre-requisites: Requires Node 18+
 
  
 ## API Endpoints
-`GET    /funds`
-`POST   /funds`
-`GET    /funds/:id`
-`PUT    /funds`
-`GET    /investors`
-`POST   /investors`
-`GET    /funds/:fund_id/investments`
-`POST   /funds/:fund_id/investments`
+- `GET    /funds`
+- `POST   /funds`
+- `GET    /funds/:id`
+- `PUT    /funds`
+- `GET    /investors`
+- `POST   /investors`
+- `GET    /funds/:fund_id/investments`
+- `POST   /funds/:fund_id/investments`
 
 ## Design decisions
 - `target_size_usd` and `amount_usd` are stored as `NUMERIC` in PostgreSQL. Prisma returns `Decimal` values as strings to preserve precision - these are converted to `Number` at the API response boundary to match the spec contract.
