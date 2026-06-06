@@ -25,3 +25,15 @@ fundsRouter.post('/', async (req,res) => {
     res.status(201)
         .json(newFundFormatted)
 })
+
+fundsRouter.get('/:id', async (req,res) => {
+    const id = req.params.id
+    const fund = await prisma.fund.findUnique({
+        where: {id: id}
+    })
+    if (!fund) {
+        res.status(404).json({"error": `no fund found with id: ${id}`})
+    } else {
+        res.json(formatFund(fund))
+    }
+})
