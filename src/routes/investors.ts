@@ -15,3 +15,11 @@ investorsRouter.get('/', async (req, res) => {
     const investors = await prisma.investor.findMany()
     res.json(investors.map(formatInvestor))
 })
+
+investorsRouter.post('/', async (req, res) => {
+    const newInvestor = await prisma.investor.create({
+        data: { ...req.body }
+    })
+    res.status(201)
+        .json(formatInvestor(newInvestor))
+})
