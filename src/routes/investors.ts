@@ -1,6 +1,8 @@
 import express from "express"
 import { prisma } from "../lib/prisma"
 import type { Investor } from "../generated/prisma/client"
+import { createInvestorSchema } from "../validators/investors"
+import * as z from "zod"
 
 export const investorsRouter = express.Router()
 
@@ -17,8 +19,13 @@ investorsRouter.get('/', async (req, res) => {
 })
 
 investorsRouter.post('/', async (req, res) => {
+    const result = createInvestorSchema.safeParse(req.body)
+    if (!result.success) {
+        res.status(400).json({"error": z.prettifyError(result.error)})
+        return
+    }
     const newInvestor = await prisma.investor.create({
-        data: { ...req.body }
+        data: result.data
     })
     res.status(201)
         .json(formatInvestor(newInvestor))

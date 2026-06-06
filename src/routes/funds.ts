@@ -34,7 +34,7 @@ fundsRouter.post('/', async (req, res) => {
         return
     }
     const newFund = await prisma.fund.create({
-        data: { ...result.data }
+        data: result.data
     })
     const newFundFormatted = formatFund(newFund)
     res.status(201)

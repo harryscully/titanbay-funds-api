@@ -1,6 +1,7 @@
 - needed to format target_size_usd as a number according to docs, Prisma converted to string to preserve precision
 - also the PUT for /funds had the id in the request body, according to REST standards, the id should be in the url...have implemented according to the docs but worth mentioning.
-- in prisma schema I set up enum for investor type as "FamilyOffice", expected output should be formatted as "Family Office"
+- in prisma schema I set up enum for investor type as "FamilyOffice" since we cannot have spaces, expected output should be formatted as "Family Office"
 - we should raise an error if the fund in funds/{fund_id}/investments isn't a valid fund_id
 - need to format amound_usd as decimal, and the date as a clean yyyy-mm-dd string
 - use Zod to verify that created/updated data is of the correct type/format
+- allow users to have investor_type be "Family Office" as expected, but transform that to "FamilyOffice" as per prisma schema
