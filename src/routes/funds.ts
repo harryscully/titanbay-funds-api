@@ -73,3 +73,22 @@ fundsRouter.get('/:fund_id/investments', async (req, res) => {
         res.json(investments.map(formatInvestment))
     }
 })
+
+fundsRouter.post('/:fund_id/investments', async (req, res) => {
+    const fund = await prisma.fund.findUnique({
+        where: { id: req.params.fund_id }
+    })
+
+    if (!fund) {
+        res.status(404).json({ "error": "fund not found" })
+    } else {
+        const newInvestment = await prisma.investment.create({
+            data: {
+                ...req.body,
+                fund_id: req.params.fund_id,
+                investment_date: new Date(req.body.investment_date)
+            }
+        })
+        res.status(201).json(formatInvestment(newInvestment))
+    }
+})
