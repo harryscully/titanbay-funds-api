@@ -1,0 +1,45 @@
+-- CreateEnum
+CREATE TYPE "Status" AS ENUM ('Fundraising', 'Investing', 'Closed');
+
+-- CreateEnum
+CREATE TYPE "InvestorType" AS ENUM ('Individual', 'Institution', 'FamilyOffice');
+
+-- CreateTable
+CREATE TABLE "Fund" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "vintage_year" INTEGER NOT NULL,
+    "target_size_usd" DECIMAL(65,30) NOT NULL,
+    "status" "Status" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Fund_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Investor" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "investor_type" "InvestorType" NOT NULL,
+    "email" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Investor_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Investment" (
+    "id" TEXT NOT NULL,
+    "investor_id" TEXT NOT NULL,
+    "fund_id" TEXT NOT NULL,
+    "amount_usd" DECIMAL(65,30) NOT NULL,
+    "investment_date" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Investment_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Investment" ADD CONSTRAINT "Investment_investor_id_fkey" FOREIGN KEY ("investor_id") REFERENCES "Investor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Investment" ADD CONSTRAINT "Investment_fund_id_fkey" FOREIGN KEY ("fund_id") REFERENCES "Fund"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
