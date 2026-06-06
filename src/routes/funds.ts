@@ -1,6 +1,8 @@
 import express from "express"
 import { prisma } from "../lib/prisma"
 import type { Fund, Investment } from "../generated/prisma/client"
+import { createFundSchema, updateFundSchema } from "../validators/funds"
+import * as z from "zod"
 
 export const fundsRouter = express.Router()
 
@@ -26,8 +28,13 @@ fundsRouter.get('/', async (req, res) => {
 })
 
 fundsRouter.post('/', async (req, res) => {
+    const result = createFundSchema.safeParse(req.body)
+    if (!result.success) {
+        res.status(400).json({"error": z.prettifyError(result.error)})
+        return
+    }
     const newFund = await prisma.fund.create({
-        data: { ...req.body }
+        data: { ...result.data }
     })
     const newFundFormatted = formatFund(newFund)
     res.status(201)
@@ -48,7 +55,12 @@ fundsRouter.get('/:id', async (req, res) => {
 
 fundsRouter.put('/', async (req, res) => {
     try {
-        const { id, ...data } = req.body
+        const result = updateFundSchema.safeParse(req.body)
+        if (!result.success) {
+            res.status(400).json({"error": z.prettifyError(result.error)})
+            return
+        }
+        const { id, ...data } = result.data
         const updatedFund = await prisma.fund.update({
             where: { id: id },
             data
